@@ -7,23 +7,31 @@
 import time
 import board
 import busio
+from board import SCL, SDA
 from digitalio import DigitalInOut
 
 # Import the SSD1306 module.
 import adafruit_ssd1306
 
+# Create the I2C interface.
+i2c = busio.I2C(SCL, SDA)
+
+# Create the SSD1306 OLED class.
+# The first two parameters are the pixel width and pixel height.  Change these
+# to the right size for your display!
+display = adafruit_ssd1306.SSD1306_I2C(128, 32, i2c)
 
 # Create the I2C interface.
-i2c = busio.I2C(board.SCL, board.SDA)
-# A reset line may be required if there is no auto-reset circuitry
-reset_pin = DigitalInOut(board.D5)
+# i2c = busio.I2C(board.SCL, board.SDA)
+# # A reset line may be required if there is no auto-reset circuitry
+# reset_pin = DigitalInOut(board.D5)
 
 # Create the SSD1306 OLED class.
 # The first two parameters are the pixel width and pixel height.  Change these
 # to the right size for your display!
 # The I2C address for these displays is 0x3d or 0x3c, change to match
 # A reset line may be required if there is no auto-reset circuitry
-display = adafruit_ssd1306.SSD1306_I2C(128, 32, i2c, addr=0x3c, reset=reset_pin)
+# display = adafruit_ssd1306.SSD1306_I2C(128, 32, i2c, addr=0x3c, reset=reset_pin)
 
 print("Framebuf capability test - these are slow and minimal but don't require"
       "a special graphics management library, only `adafruit_framebuf`")

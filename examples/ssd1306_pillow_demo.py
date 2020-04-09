@@ -9,11 +9,13 @@ not support PIL/pillow (python imaging library)!
 
 import board
 import digitalio
+from board import SCL, SDA
+import busio
 from PIL import Image, ImageDraw, ImageFont
 import adafruit_ssd1306
 
 # Define the Reset Pin
-oled_reset = digitalio.DigitalInOut(board.D4)
+# oled_reset = digitalio.DigitalInOut(board.D4)
 
 # Change these
 # to the right size for your display!
@@ -22,14 +24,22 @@ HEIGHT = 32     # Change to 64 if needed
 BORDER = 5
 
 # Use for I2C.
-i2c = board.I2C()
-oled = adafruit_ssd1306.SSD1306_I2C(WIDTH, HEIGHT, i2c, addr=0x3c, reset=oled_reset)
+# i2c = board.I2C()
+# oled = adafruit_ssd1306.SSD1306_I2C(WIDTH, HEIGHT, i2c, addr=0x3c, reset=oled_reset)
 
 # Use for SPI
 #spi = board.SPI()
 #oled_cs = digitalio.DigitalInOut(board.D5)
 #oled_dc = digitalio.DigitalInOut(board.D6)
 #oled = adafruit_ssd1306.SSD1306_SPI(WIDTH, HEIGHT, spi, oled_dc, oled_reset, oled_cs)
+
+# Create the I2C interface.
+i2c = busio.I2C(SCL, SDA)
+
+# Create the SSD1306 OLED class.
+# The first two parameters are the pixel width and pixel height.  Change these
+# to the right size for your display!
+oled = adafruit_ssd1306.SSD1306_I2C(128, 32, i2c)
 
 # Clear display.
 oled.fill(0)
