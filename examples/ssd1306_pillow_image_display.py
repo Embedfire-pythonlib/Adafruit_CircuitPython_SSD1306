@@ -7,16 +7,23 @@
 
 # Imports the necessary libraries...
 import sys
+from board import SCL, SDA, DC, RST, SS0
+import busio
 import board
 import digitalio
 from PIL import Image
 import adafruit_ssd1306
 
-# Setting some variables for our reset pin etc.
-RESET_PIN = digitalio.DigitalInOut(board.D4)
+# Create the I2C interface.
+i2c = busio.I2C(SCL, SDA)
+oled = adafruit_ssd1306.SSD1306_I2C(128, 64, i2c)
 
-i2c = board.I2C()
-oled = adafruit_ssd1306.SSD1306_I2C(128, 64, i2c, addr=0x3d, reset=RESET_PIN)
+# # Create the SPI interface.
+# spi = board.SPI()
+# oled_cs = digitalio.DigitalInOut(SS0)
+# oled_dc = digitalio.DigitalInOut(DC)
+# oled_reset = None
+# oled = adafruit_ssd1306.SSD1306_SPI(128, 64, spi, oled_dc, oled_reset, oled_cs)
 
 # Clear display.
 oled.fill(0)

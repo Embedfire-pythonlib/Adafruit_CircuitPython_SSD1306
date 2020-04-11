@@ -8,15 +8,22 @@
 # Imports the necessary libraries...
 import time
 import board
+from board import SCL, SDA, DC, RST, SS0
+import busio
 import digitalio
 from PIL import Image, ImageDraw, ImageFont
 import adafruit_ssd1306
 
-# Setting some variables for our reset pin etc.
-RESET_PIN = digitalio.DigitalInOut(board.D4)
+# Create the I2C interface.
+i2c = busio.I2C(SCL, SDA)
+oled = adafruit_ssd1306.SSD1306_I2C(128, 64, i2c)
 
-i2c = board.I2C()
-oled = adafruit_ssd1306.SSD1306_I2C(128, 64, i2c, addr=0x3d, reset=RESET_PIN)
+# # Create the SPI interface.
+# spi = board.SPI()
+# oled_cs = digitalio.DigitalInOut(SS0)
+# oled_dc = digitalio.DigitalInOut(DC)
+# oled_reset = None
+# oled = adafruit_ssd1306.SSD1306_SPI(128, 64, spi, oled_dc, oled_reset, oled_cs)
 
 # Clear display.
 oled.fill(0)
@@ -26,9 +33,8 @@ oled.show()
 image = Image.new('1', (oled.width, oled.height))
 draw = ImageDraw.Draw(image)
 
-# Load a font in 2 different sizes.
-font = ImageFont.truetype('/usr/share/fonts/truetype/dejavu/DejaVuSans.ttf', 16)
-font2 = ImageFont.truetype('/usr/share/fonts/truetype/dejavu/DejaVuSans.ttf', 24)
+# Load default font.
+font = ImageFont.load_default()
 
 offset = 0 # flips between 0 and 32 for double buffering
 
@@ -40,7 +46,7 @@ while True:
     text = time.strftime("%e %b %Y")
     draw.text((0, 14), text, font=font, fill=255)
     text = time.strftime("%X")
-    draw.text((0, 36), text, font=font2, fill=255)
+    draw.text((0, 36), text, font=font, fill=255)
     oled.image(image)
     oled.show()
 
